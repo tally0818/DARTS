@@ -20,22 +20,22 @@ The output cell is obtained by concatenating all the intermediate nodes.
 
 Since we're finding two types of cells (normal and reduction cells), the size of α would be $2 * number of edges * |O|$. When w represents the weight of each operation, our goal is to solve a bilevel optimization problem:
 
-$$\mathscr{L}_{val}(w^{*}(\alpha),\alpha)\\w^{*}(\alpha)=\min_{w}\mathscr{L}_{train}(w,\alpha)$$
+$$\mathscr{L}{\text{val}}(w^*(\alpha),\alpha) = \min{w}\mathscr{L}_{\text{train}}(w,\alpha)$$
 
 1.3. Approximate archtecture gradient
 
 Since evaluating the architecture gradient exactly can be prohibitive due to the expensive inner optimization, the authors proposed a simple approximation scheme:
-Using single-step approximation, we can approximate $\nabla _{\alpha}\mathscr{L}_{val}(w^{*}(\alpha),\alpha)$ as 
+Using single-step approximation, we can approximate $\nabla_{\alpha}\mathscr{L}_{\text{val}}(w^*(\alpha),\alpha)$ as 
 
-$$\nabla _{\alpha}\mathscr{L}_{val}(w^{*}(\alpha),\alpha)\approx\nabla _{\alpha}\mathscr{L}_{val}(w-\xi\nabla _{w}\mathscr{L}_{train}(w,\alpha),\alpha)$$
+$$\nabla_{\alpha}\mathscr{L}{\text{val}}(w^*(\alpha),\alpha) \approx \nabla{\alpha}\mathscr{L}{\text{val}}(w-\xi\nabla{w}\mathscr{L}_{\text{train}}(w,\alpha),\alpha)$$
 
-let $w'=w-\xi\nabla _{w}\mathscr{L}_{train}(w.\alpha)$ then by chain-rule,
+let $w' = w-\xi\nabla_{w}\mathscr{L}_{\text{train}}(w,\alpha)$ then by chain-rule,
 
-$$\nabla_{\alpha}\mathscr{L}_{val}(w-\xi\nabla _{w}\mathscr{L}_{train}(w.\alpha),\alpha)=\nabla_{\alpha}\mathscr{L}_{val}(w',\alpha)-\xi\nabla _{\alpha,w}^{2}\mathscr{L}_{train}(w,\alpha)\nabla_{w'}\mathscr{L}_{val}(w',\alpha)$$
+$$\nabla_{\alpha}\mathscr{L}{\text{val}}(w-\xi\nabla{w}\mathscr{L}{\text{train}}(w,\alpha),\alpha) = \nabla{\alpha}\mathscr{L}{\text{val}}(w',\alpha)-\xi\nabla^2{\alpha,w}\mathscr{L}{\text{train}}(w,\alpha)\nabla{w'}\mathscr{L}_{\text{val}}(w',\alpha)$$
 
-let $w^{\pm}=w\pm \varepsilon\nabla _{w'}\mathscr{L}_{val}(w',\alpha)$  then, by finite difference approximation,
+let $w^{\pm} = w\pm \varepsilon\nabla_{w'}\mathscr{L}_{\text{val}}(w',\alpha)$ then, by finite difference approximation,
 
-$$_{\alpha,w}^{2}\mathscr{L}_{train}(w,\alpha)\nabla_{w'}\mathscr{L}_{val}(w',\alpha)\approx\frac{\nabla _{\alpha}\mathscr{L}_{train}(w^{+},\alpha)-\nabla _{\alpha}\mathscr{L}_{train}(w^{-},\alpha)}{2\epsilon}$$
+$$\nabla^2_{\alpha,w}\mathscr{L}{\text{train}}(w,\alpha)\nabla{w'}\mathscr{L}{\text{val}}(w',\alpha) \approx \frac{\nabla{\alpha}\mathscr{L}{\text{train}}(w^+,\alpha)-\nabla{\alpha}\mathscr{L}_{\text{train}}(w^-,\alpha)}{2\varepsilon}$$
 
 By using this scheme, complexity is reduced from $O(|\alpha||w|)$ to $O(|\alpha|+|w|)$
 
@@ -47,6 +47,7 @@ The strength of operation o is defined as:
 $$\frac{exp(\alpha_{o}^{(i,j)})}{\sum_{o'\in O}^{}exp(\alpha_{o'}^{(i,j)})}$$
 
 Zero operations are excluded to make a fair comparison with existing models (to match the number of operations) and because the strength of zero operations is underdetermined, as they only affect the scale of the resulting node representations while not affecting the final classification output.
+![](/imgs/overview.png)
 
 ## 2. Experiment
 2.1. Searching for convolutional cells on CIFAR-10
@@ -54,11 +55,14 @@ Zero operations are excluded to make a fair comparison with existing models (to 
  In my experiment, the operation set O included: 1×3 followed by 3×1 convolution, 3×3 average pooling, 3×3 max pooling, 3×3 convolution, 3×3 and 5×5 separable convolutions, 3×3 and 5×5 dilated convolutions, identity, and zero operations. All convolutional operations followed the ReLU-Conv-BN order. The convolutional cell consisted of N=7 nodes, with other details matching the NASNet search space.
 During the search process, the macrostructure was fixed as [1,1,1] (comprising a stem layer, one normal cell, one reduction cell, one normal cell, and a classification layer). The initial number of channels for the stem layer was set to 8. The architecture parameters and model weights were optimized using ADAM and SGD respectively, following the cosine schedule as described in the reference paper.
 
+The code running this experiment is at “main.py”
+
 ## 3. Results
 3.1. Founded cells
 The cells I found by running my code on the setting of 2.1 are like the below:
 
-
+![](/imgs/normal_cell.png)
+![](/imgs/reduction_cell.png)
 
 ## 4. Drawbacks
 4.1. Rank disorder
@@ -74,5 +78,6 @@ The cells I found by running my code on the setting of 2.1 are like the below:
  While not observed in our results (possibly due to insufficient training time in the given 사지방 environment), several studies have shown that differentiable NAS techniques tend to favor skip connections over other operation choices. This might be caused by the supernetwork using skip connections to compensate for vanishing gradients. To address this bias, methods such as applying early stopping based on the stability of architecture weight rankings have been proposed. However, some researchers argue that favoring skip connections over other operation choices may be acceptable.
 
 ## 5. References
-https://arxiv.org/pdf/1806.09055
-https://arxiv.org/pdf/2301.08727
+[DARTS: Differentiable Architecture search](https://arxiv.org/pdf/1806.09055)
+
+[Neural Architecture Search: Insights from 1000 Papers](https://arxiv.org/pdf/2301.08727)

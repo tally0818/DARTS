@@ -52,7 +52,7 @@ Zero operations are excluded to make a fair comparison with existing models (to 
 ## 2. Experiment
 2.1. Searching for convolutional cells on CIFAR-10
 
- In my experiment, the operation set O included: 1×3 followed by 3×1 convolution, 3×3 average pooling, 3×3 max pooling, 3×3 convolution, 3×3 and 5×5 separable convolutions, 3×3 and 5×5 dilated convolutions, identity, and zero operations. All convolutional operations followed the ReLU-Conv-BN order. The convolutional cell consisted of N=7 nodes, with other details matching the NASNet search space.
+ In my experiment, total epochs were set to 10 and the operation set O included: 1×3 followed by 3×1 convolution, 3×3 average pooling, 3×3 max pooling, 3×3 convolution, 3×3 and 5×5 separable convolutions, 3×3 and 5×5 dilated convolutions, identity, and zero operations. All convolutional operations followed the ReLU-Conv-BN order. The convolutional cell consisted of N=7 nodes, with other details matching the NASNet search space.
 During the search process, the macrostructure was fixed as [1,1,1] (comprising a stem layer, one normal cell, one reduction cell, one normal cell, and a classification layer). The initial number of channels for the stem layer was set to 8. The architecture parameters and model weights were optimized using ADAM and SGD respectively, following the cosine schedule as described in the reference paper.
 
 The code running this experiment is at “main.py”

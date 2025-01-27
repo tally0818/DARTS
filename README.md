@@ -27,15 +27,15 @@ $$\mathscr{L}{\text{val}}(w^*(\alpha),\alpha) = \min{w}\mathscr{L}_{\text{train}
 Since evaluating the architecture gradient exactly can be prohibitive due to the expensive inner optimization, the authors proposed a simple approximation scheme:
 Using single-step approximation, we can approximate $\nabla_{\alpha}\mathscr{L}_{\text{val}}(w^*(\alpha),\alpha)$ as 
 
-$$\nabla_{\alpha}\mathscr{L}{\text{val}}(w^*(\alpha),\alpha) \approx \nabla{\alpha}\mathscr{L}{\text{val}}(w-\xi\nabla{w}\mathscr{L}_{\text{train}}(w,\alpha),\alpha)$$
+$$\nabla_{\alpha}\mathscr{L}{\text{val}}(w^*(\alpha),\alpha) \approx \nabla_{\alpha}\mathscr{L}{\text{val}}(w-\xi\nabla_{w}\mathscr{L}_{\text{train}}(w,\alpha),\alpha)$$
 
 let $w' = w-\xi\nabla_{w}\mathscr{L}_{\text{train}}(w,\alpha)$ then by chain-rule,
 
-$$\nabla_{\alpha}\mathscr{L}{\text{val}}(w-\xi\nabla{w}\mathscr{L}{\text{train}}(w,\alpha),\alpha) = \nabla{\alpha}\mathscr{L}{\text{val}}(w',\alpha)-\xi\nabla^2{\alpha,w}\mathscr{L}{\text{train}}(w,\alpha)\nabla{w'}\mathscr{L}_{\text{val}}(w',\alpha)$$
+$$\nabla_{\alpha}\mathscr{L}{\text{val}}(w-\xi\nabla{w}\mathscr{L}{\text{train}}(w,\alpha),\alpha) = \nabla_{\alpha}\mathscr{L}{\text{val}}(w',\alpha)-\xi\nabla^2_{\alpha,w}\mathscr{L}\text{train}(w,\alpha)\nabla_{w'}\mathscr{L}_{\text{val}}(w',\alpha)$$
 
 let $w^{\pm} = w\pm \varepsilon\nabla_{w'}\mathscr{L}_{\text{val}}(w',\alpha)$ then, by finite difference approximation,
 
-$$\nabla^2_{\alpha,w}\mathscr{L}{\text{train}}(w,\alpha)\nabla{w'}\mathscr{L}{\text{val}}(w',\alpha) \approx \frac{\nabla{\alpha}\mathscr{L}{\text{train}}(w^+,\alpha)-\nabla{\alpha}\mathscr{L}_{\text{train}}(w^-,\alpha)}{2\varepsilon}$$
+$$\nabla^2_{\alpha,w}\mathscr{L}{\text{train}}(w,\alpha)\nabla_{w'}\mathscr{L}{\text{val}}(w',\alpha) \approx \frac{\nabla_{\alpha}\mathscr{L}{\text{train}}(w^+,\alpha)-\nabla_{\alpha}\mathscr{L}_{\text{train}}(w^-,\alpha)}{2\varepsilon}$$
 
 By using this scheme, complexity is reduced from $O(|\alpha||w|)$ to $O(|\alpha|+|w|)$
 

@@ -59,6 +59,7 @@ The code running this experiment is at “main.py”
 
 ## 3. Results
 3.1. Founded cells
+
 The cells I found by running my code on the setting of 2.1 are like the below:
 
 ![](/imgs/normal_cell.png)
